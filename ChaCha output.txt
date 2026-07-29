@@ -1,0 +1,30 @@
+=== RFC 8439 Section 2.4.2 self-test ===
+Result: PASS (ciphertext matches RFC 8439 exactly)
+
+=== Encryption / decryption example ===
+Plaintext (91 bytes): "The quick brown fox jumps over the lazy dog. ChaCha20 demo: confidentiality via stream XOR."
+
+Ciphertext (hex): c2365ee6889917ba3d286a86bd5e976b
+                  75108a55a0ee52bbae79b1dcb74130da
+                  db97bd64f6cd8a65898503814f779d70
+                  11f8f58d514688546bcfa699841197a9
+                  59e1fa5a7eba9a95819c528277342487
+                  17531f6e231ace3f5427a9
+                  
+Decrypted: "The quick brown fox jumps over the lazy dog. ChaCha20 demo: confidentiality via stream XOR."
+Round-trip check: OK (matches original)
+
+=== Performance benchmark ===
+Payload size : 1048576 bytes (1.00 MiB) per trial
+Trials       : 200
+
+-- CPU cycles (RDTSC/RDTSCP) --
+Best  :   77156230 cycles  (73.582 cycles/byte)
+Average:   83231909 cycles  (79.376 cycles/byte)
+
+-- Wall-clock throughput --
+Total data processed : 200.00 MiB
+Elapsed time          : 7.202062 s
+Throughput             : 27.8 MB/s  (0.027 GB/s)
+Implied clock (sanity check): ~2.31 GHz
+
