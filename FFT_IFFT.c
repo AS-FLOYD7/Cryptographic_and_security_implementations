@@ -6,10 +6,17 @@
 #include <complex.h>
 // Include the math library to access trigonometric functions necessary for calculating roots of unity.
 #include <math.h>
-// Include the intrin library to access __rdtsc() for exact CPU clock cycle measurements on Windows/x86.
-#include <intrin.h>
 // Include standard integer types for 64-bit cycle count variables.
 #include <stdint.h>
+
+// Cross-compiler compatibility for the __rdtsc() hardware intrinsic to measure CPU cycles.
+#ifdef _MSC_VER
+    // Header for Microsoft Visual Studio (MSVC) compiler.
+    #include <intrin.h>
+#else
+    // Header for GCC and Clang compilers (like MinGW).
+    #include <x86intrin.h>
+#endif
 
 // Define the mathematical constant Pi to maximum double precision for accurate angular calculations.
 #define PI 3.14159265358979323846
@@ -28,29 +35,29 @@ void fft_core(double complex *P, int n, int inverse) {
     for (int i = 0; i < n / 2; i++) {
         // Extract the even-indexed elements from the parent array into Pe.
         Pe[i] = P[2 * i];
-        // Extract the odd-indexed elements from the parent array into Po[cite: 1].
+        // Extract the odd-indexed elements from the parent array into Po.
         Po[i] = P[2 * i + 1];
     }
 
-    // Recursively call the FFT core function on the extracted even-indexed coefficients[cite: 1].
+    // Recursively call the FFT core function on the extracted even-indexed coefficients.
     fft_core(Pe, n / 2, inverse);
-    // Recursively call the FFT core function on the extracted odd-indexed coefficients[cite: 1].
+    // Recursively call the FFT core function on the extracted odd-indexed coefficients.
     fft_core(Po, n / 2, inverse);
 
-    // Calculate the phase angle, using a negative angle for IFFT (inverse root of unity) and positive for FFT[cite: 1].
+    // Calculate the phase angle, using a negative angle for IFFT (inverse root of unity) and positive for FFT.
     double angle = (inverse ? -2.0 * PI / n : 2.0 * PI / n);
-    // Calculate the fundamental n-th root of unity (omega) utilizing Euler's formula[cite: 1].
+    // Calculate the fundamental n-th root of unity (omega) utilizing Euler's formula.
     double complex omega = cos(angle) + I * sin(angle);
-    // Initialize the current power of the root of unity (w) starting exactly at 1[cite: 1].
+    // Initialize the current power of the root of unity (w) starting exactly at 1.
     double complex w = 1.0 + 0.0 * I;
 
-    // Iterate n/2 times to combine the results of the recursive calls back into the parent array[cite: 1].
+    // Iterate n/2 times to combine the results of the recursive calls back into the parent array.
     for (int j = 0; j < n / 2; j++) {
-        // Precompute the multiplied term (w * Po[j]) to avoid redundant computations in the butterfly step[cite: 1].
+        // Precompute the multiplied term (w * Po[j]) to avoid redundant computations in the butterfly step.
         double complex w_Po = w * Po[j];
-        // Apply the symmetric overlap trick to set the j-th element using addition[cite: 1].
+        // Apply the symmetric overlap trick to set the j-th element using addition.
         P[j] = Pe[j] + w_Po;
-        // Apply the symmetric overlap trick to set the (j + n/2)-th element using subtraction[cite: 1].
+        // Apply the symmetric overlap trick to set the (j + n/2)-th element using subtraction.
         P[j + n / 2] = Pe[j] - w_Po;
         // Multiply the current root of unity power by omega to prepare for the next loop iteration.
         w = w * omega;
@@ -62,47 +69,47 @@ void fft_core(double complex *P, int n, int inverse) {
     free(Po);
 }
 
-// Wrapper function to execute the Forward Fast Fourier Transform cleanly[cite: 1].
+// Wrapper function to execute the Forward Fast Fourier Transform cleanly.
 void fft(double complex *P, int n) {
     // Call the core FFT function passing 0 for the inverse flag.
     fft_core(P, n, 0);
 }
 
-// Wrapper function to execute the Inverse Fast Fourier Transform cleanly[cite: 1].
+// Wrapper function to execute the Inverse Fast Fourier Transform cleanly.
 void ifft(double complex *P, int n) {
-    // Call the core FFT function passing 1 for the inverse flag to use the inverse root of unity[cite: 1].
+    // Call the core FFT function passing 1 for the inverse flag to use the inverse root of unity.
     fft_core(P, n, 1);
     // Iterate over every element in the resulting evaluated array.
     for (int i = 0; i < n; i++) {
-        // Scale the final interpolation results by 1/n to retrieve the correct original coefficients[cite: 1].
+        // Scale the final interpolation results by 1/n to retrieve the correct original coefficients.
         P[i] /= n;
     }
 }
 
 // Define the main function where the program execution and polynomial multiplication sequence begins.
 int main() {
-    // Define the degree (d) of the two input polynomials we are multiplying (d = 2)[cite: 1].
+    // Define the degree (d) of the two input polynomials we are multiplying (d = 2).
     int d = 2;
-    // Calculate the minimum required evaluation points to uniquely define the product polynomial, which is 2d + 1[cite: 1].
+    // Calculate the minimum required evaluation points to uniquely define the product polynomial, which is 2d + 1.
     int min_points = 2 * d + 1;
     // Initialize the padded array size variable (n) to 1.
     int n = 1;
-    // Iteratively double n until it is an exact power of 2 that is greater than or equal to min_points[cite: 1].
+    // Iteratively double n until it is an exact power of 2 that is greater than or equal to min_points.
     while (n < min_points) n *= 2; 
 
-    // Allocate memory initialized to zero for polynomial A to natively handle zero-padding[cite: 1].
+    // Allocate memory initialized to zero for polynomial A to natively handle zero-padding.
     double complex *A = (double complex *)calloc(n, sizeof(double complex));
-    // Allocate memory initialized to zero for polynomial B to natively handle zero-padding[cite: 1].
+    // Allocate memory initialized to zero for polynomial B to natively handle zero-padding.
     double complex *B = (double complex *)calloc(n, sizeof(double complex));
     // Allocate memory initialized to zero for the product polynomial C.
     double complex *C = (double complex *)calloc(n, sizeof(double complex));
 
-    // Populate Polynomial A: A(x) = x^2 + 3x + 2[cite: 1].
+    // Populate Polynomial A: A(x) = x^2 + 3x + 2.
     A[0] = 2.0 + 0.0 * I;
     A[1] = 3.0 + 0.0 * I;
     A[2] = 1.0 + 0.0 * I;
 
-    // Populate Polynomial B: B(x) = 2x^2 + 1[cite: 1].
+    // Populate Polynomial B: B(x) = 2x^2 + 1.
     B[0] = 1.0 + 0.0 * I;
     B[1] = 0.0 + 0.0 * I;
     B[2] = 2.0 + 0.0 * I;
@@ -116,7 +123,7 @@ int main() {
     
     // Capture the starting CPU cycles before Polynomial A FFT.
     start_cycles = __rdtsc();
-    // Execute the Forward FFT on polynomial A[cite: 1].
+    // Execute the Forward FFT on polynomial A.
     fft(A, n);
     // Capture the ending CPU cycles after Polynomial A FFT.
     end_cycles = __rdtsc();
@@ -127,7 +134,7 @@ int main() {
     
     // Capture the starting CPU cycles before Polynomial B FFT.
     start_cycles = __rdtsc();
-    // Execute the Forward FFT on polynomial B[cite: 1].
+    // Execute the Forward FFT on polynomial B.
     fft(B, n);
     // Capture the ending CPU cycles after Polynomial B FFT.
     end_cycles = __rdtsc();
@@ -142,7 +149,7 @@ int main() {
     start_cycles = __rdtsc();
     // Loop through all evaluated points up to n.
     for (int i = 0; i < n; i++) {
-        // Multiply the evaluated point of A by the evaluated point of B and store it in C[cite: 1].
+        // Multiply the evaluated point of A by the evaluated point of B and store it in C.
         C[i] = A[i] * B[i];
     }
     // Capture the ending CPU cycles after pointwise multiplication.
@@ -156,7 +163,7 @@ int main() {
     
     // Capture the starting CPU cycles before Inverse FFT.
     start_cycles = __rdtsc();
-    // Execute the Inverse FFT on polynomial C to revert it to standard coefficients[cite: 1].
+    // Execute the Inverse FFT on polynomial C to revert it to standard coefficients.
     ifft(C, n);
     // Capture the ending CPU cycles after Inverse FFT.
     end_cycles = __rdtsc();
