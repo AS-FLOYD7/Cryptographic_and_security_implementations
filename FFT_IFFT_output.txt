@@ -1,13 +1,18 @@
 
 --- STEP 1: EVALUATION (Coefficient to Value Representation) ---
 Executing O(n log n) FFT on Polynomial A...
+-> Polynomial A FFT completed in 54288 CPU clock cycles.
+
 Executing O(n log n) FFT on Polynomial B...
+-> Polynomial B FFT completed in 1908 CPU clock cycles.
 
 --- STEP 2: POINTWISE MULTIPLICATION ---
 Multiplying corresponding y-values in O(n) time...
+-> Pointwise multiplication completed in 252 CPU clock cycles.
 
 --- STEP 3: INTERPOLATION (Value to Coefficient Representation) ---
 Executing O(n log n) Inverse FFT on Polynomial C...
+-> Polynomial C Inverse FFT completed in 2664 CPU clock cycles.
 
 --- FINAL RESULT: POLYNOMIAL C(x) = A(x) * B(x) ---
 C(x) = 2.00 + 3.00x + 5.00x^2 + 6.00x^3 + 2.00x^4
