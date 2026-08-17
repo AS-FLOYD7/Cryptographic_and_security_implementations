@@ -1,0 +1,14 @@
+
+--- STEP 1: EVALUATION (Coefficient to Value Representation) ---
+Executing O(n log n) FFT on Polynomial A...
+Executing O(n log n) FFT on Polynomial B...
+
+--- STEP 2: POINTWISE MULTIPLICATION ---
+Multiplying corresponding y-values in O(n) time...
+
+--- STEP 3: INTERPOLATION (Value to Coefficient Representation) ---
+Executing O(n log n) Inverse FFT on Polynomial C...
+
+--- FINAL RESULT: POLYNOMIAL C(x) = A(x) * B(x) ---
+C(x) = 2.00 + 3.00x + 5.00x^2 + 6.00x^3 + 2.00x^4
+Array Form: [2, 3, 5, 6, 2, 0, 0, 0]
