@@ -6,6 +6,10 @@
 #include <complex.h>
 // Include the math library to access trigonometric functions necessary for calculating roots of unity.
 #include <math.h>
+// Include the intrin library to access __rdtsc() for exact CPU clock cycle measurements on Windows/x86.
+#include <intrin.h>
+// Include standard integer types for 64-bit cycle count variables.
+#include <stdint.h>
 
 // Define the mathematical constant Pi to maximum double precision for accurate angular calculations.
 #define PI 3.14159265358979323846
@@ -94,48 +98,70 @@ int main() {
     double complex *C = (double complex *)calloc(n, sizeof(double complex));
 
     // Populate Polynomial A: A(x) = x^2 + 3x + 2[cite: 1].
-    // Assign the x^0 coefficient for polynomial A.
     A[0] = 2.0 + 0.0 * I;
-    // Assign the x^1 coefficient for polynomial A.
     A[1] = 3.0 + 0.0 * I;
-    // Assign the x^2 coefficient for polynomial A.
     A[2] = 1.0 + 0.0 * I;
 
     // Populate Polynomial B: B(x) = 2x^2 + 1[cite: 1].
-    // Assign the x^0 coefficient for polynomial B.
     B[0] = 1.0 + 0.0 * I;
-    // Assign the x^1 coefficient for polynomial B.
     B[1] = 0.0 + 0.0 * I;
-    // Assign the x^2 coefficient for polynomial B.
     B[2] = 2.0 + 0.0 * I;
+
+    // Declare 64-bit unsigned integers to store the hardware CPU clock cycle counts before and after operations.
+    uint64_t start_cycles, end_cycles;
 
     // Print the header for the coefficient to value transformation phase.
     printf("--- STEP 1: EVALUATION (Coefficient to Value Representation) ---\n");
-    // Print a message indicating FFT is executing on polynomial A.
     printf("Executing O(n log n) FFT on Polynomial A...\n");
+    
+    // Capture the starting CPU cycles before Polynomial A FFT.
+    start_cycles = __rdtsc();
     // Execute the Forward FFT on polynomial A[cite: 1].
     fft(A, n);
-    // Print a message indicating FFT is executing on polynomial B.
-    printf("Executing O(n log n) FFT on Polynomial B...\n\n");
+    // Capture the ending CPU cycles after Polynomial A FFT.
+    end_cycles = __rdtsc();
+    // Print the exact CPU cycles taken for this operation.
+    printf("-> Polynomial A FFT completed in %llu CPU clock cycles.\n\n", end_cycles - start_cycles);
+
+    printf("Executing O(n log n) FFT on Polynomial B...\n");
+    
+    // Capture the starting CPU cycles before Polynomial B FFT.
+    start_cycles = __rdtsc();
     // Execute the Forward FFT on polynomial B[cite: 1].
     fft(B, n);
+    // Capture the ending CPU cycles after Polynomial B FFT.
+    end_cycles = __rdtsc();
+    // Print the exact CPU cycles taken for this operation.
+    printf("-> Polynomial B FFT completed in %llu CPU clock cycles.\n\n", end_cycles - start_cycles);
 
     // Print the header for the pointwise multiplication phase.
     printf("--- STEP 2: POINTWISE MULTIPLICATION ---\n");
-    // Print a message explaining the linear time matrix-vector multiplication equivalent.
-    printf("Multiplying corresponding y-values in O(n) time...\n\n");
+    printf("Multiplying corresponding y-values in O(n) time...\n");
+    
+    // Capture the starting CPU cycles before pointwise multiplication.
+    start_cycles = __rdtsc();
     // Loop through all evaluated points up to n.
     for (int i = 0; i < n; i++) {
         // Multiply the evaluated point of A by the evaluated point of B and store it in C[cite: 1].
         C[i] = A[i] * B[i];
     }
+    // Capture the ending CPU cycles after pointwise multiplication.
+    end_cycles = __rdtsc();
+    // Print the exact CPU cycles taken for this operation.
+    printf("-> Pointwise multiplication completed in %llu CPU clock cycles.\n\n", end_cycles - start_cycles);
 
     // Print the header for the value to coefficient interpolation phase.
     printf("--- STEP 3: INTERPOLATION (Value to Coefficient Representation) ---\n");
-    // Print a message indicating IFFT is executing on the product polynomial C.
-    printf("Executing O(n log n) Inverse FFT on Polynomial C...\n\n");
+    printf("Executing O(n log n) Inverse FFT on Polynomial C...\n");
+    
+    // Capture the starting CPU cycles before Inverse FFT.
+    start_cycles = __rdtsc();
     // Execute the Inverse FFT on polynomial C to revert it to standard coefficients[cite: 1].
     ifft(C, n);
+    // Capture the ending CPU cycles after Inverse FFT.
+    end_cycles = __rdtsc();
+    // Print the exact CPU cycles taken for this operation.
+    printf("-> Polynomial C Inverse FFT completed in %llu CPU clock cycles.\n\n", end_cycles - start_cycles);
 
     // Print the header for the final analytical output.
     printf("--- FINAL RESULT: POLYNOMIAL C(x) = A(x) * B(x) ---\n");
