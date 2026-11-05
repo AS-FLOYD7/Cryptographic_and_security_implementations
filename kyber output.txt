@@ -1,0 +1,23 @@
+========================================================
+     Kyber-512 PKE Implementation in C using NTT        
+========================================================
+
+[*] Starting Kyber Operations...
+
+--- Output Validation ---
+Original Msg   : 66B24843BB2A051548A160FDB7F3C59310124AD40464BDA4EE90B0B4C629D898
+Decrypted Msg  : 66B24843BB2A051548A160FDB7F3C59310124AD40464BDA4EE90B0B4C629D898
+
+[+] SUCCESS! The decrypted message matches the original exactly.
+
+--- Performance Benchmark (Average CPU Cycles over 1000 runs) ---
+ | NTT Operation        :      38184 cycles |
+ | InvNTT Operation     :      62536 cycles |
+ | PKE Key Generation   :     719321 cycles |
+ | PKE Encryption       :     790142 cycles |
+ | PKE Decryption       :     204841 cycles |
+--------------------------------------------------------------
+
+
+...Program finished with exit code 0
+Press ENTER to exit console.
