@@ -1,0 +1,48 @@
+========================================================================================
+   POST-QUANTUM HYBRID DOUBLE RATCHET (PQXDH + ML-KEM-1024 + 256-BIT ARX KDF ENGINE)    
+========================================================================================
+
+[STAGE 1] PQXDH Hybrid Root Extraction (CPU Cycles: 2710)
+  X25519 Shared      : 8A3F91C2D4E50671 19B4C72E5F803A62 4D7E20A9B1C83F54 F061D2E3A4B59C87
+  ML-KEM-1024 Shared : E7C14908B2A6D53F 38D0F51A7C9E24B6 92A46E81C3F70B5D 5B1E83D47A02C96E
+  Hybrid Root Key    : B7B86BD19BBE8676 04B82BC965637E26 C2A7CF1E6A6F7CBE 04D8925654E0077A
+  Initial Chain Key  : 56E1128B8E96399D 6E9462C30A461B77 138CA2C857F5AA52 1F4073771D9EF359
+
+[MESSAGE 1 | Epoch 1, Step 1] (Ratchet+AEAD Cycles: 5592)
+  Plaintext          : "HANDSHAKE_OK: PQXDH hybrid channel active."
+  Ephemeral Msg Key  : 58B45F861923FDD6 6797F3027CF33339 85AE0C8F60C0D52B B3DD27D8F4D4DAB0
+  Updated Chain Key  : 9ED033B9B0F0CB05 6FB0A7ABB9E5BA53 328BEC8CAD3106F9 FBF90C7735504FDD
+  Ciphertext (16B)   : C9 55 EF 8A 11 F1 7A 7C E3 B8 1E AB 52 8D 56 B2 | MAC: 1EAF7B0846FAA983 [AUTH_OK]
+  Scrubbed Msg Key   : 0000000000000000 (Forward Secrecy Enforced)
+
+[MESSAGE 2 | Epoch 1, Step 2] (Ratchet+AEAD Cycles: 4719)
+  Plaintext          : "DATA_STREAM: Module-LWE parameters verified."
+  Ephemeral Msg Key  : 8BD536B970471C37 43A4F3C383E69A66 7CBCE87DAE96AACB E47DA52304CE9271
+  Updated Chain Key  : 07B1013503A14EC2 2BBF85397CAD94F5 7E0B4CCBD0CF4067 642928FD170AC991
+  Ciphertext (16B)   : 6D 93 EB 1B 5D 8F 7E 69 03 DD E0 10 01 F7 8B F7 | MAC: 3F6AE9D0E09018CC [AUTH_OK]
+  Scrubbed Msg Key   : 0000000000000000 (Forward Secrecy Enforced)
+
+----------------------------------------------------------------------------------------
+[STAGE 2] Asymmetric Hybrid Root Ratchet -> Epoch 2 (CPU Cycles: 2996)
+  Healed Root Key    : 19EA257383F8368E C0FDDD2136378633 600BBC3E8BEFE3F3 1393C18B3014E778
+  New Chain Key      : DF85B655A8C32DA0 24DE2273E35E36D5 361B957B09DBA447 88941581183AD7B0
+----------------------------------------------------------------------------------------
+
+[MESSAGE 3 | Epoch 2, Step 1] (Ratchet+AEAD Cycles: 4407)
+  Plaintext          : "SPQR_RATCHET: Post-compromise KEM heal complete."
+  Ephemeral Msg Key  : 958F14F69BACFA07 7F27F6A87C6C1C61 D96706AF408DC453 6EBEA0E905721E33
+  Updated Chain Key  : C27C156B8B1A5BDF 41F1E54A181C95AE AF9DD018BEEDC737 EFD12C742E59B417
+  Ciphertext (16B)   : 7B 7E EE DE 59 35 ED 29 20 52 DA 8F 39 4E 96 8B | MAC: E6C9C9D76D7BAF29 [AUTH_OK]
+  Scrubbed Msg Key   : 0000000000000000 (Forward Secrecy Enforced)
+
+[MESSAGE 4 | Epoch 2, Step 2] (Ratchet+AEAD Cycles: 4123)
+  Plaintext          : "CLOSING_FIN: Forward secrecy state scrubbed."
+  Ephemeral Msg Key  : 93A224285FAB624A 18B5991DE8167D14 58C5E5B5D2A12B8F 09137A1BAAA08AFF
+  Updated Chain Key  : 1228A2648821C9C0 23DA65942B6932AC 656847B854CD5784 24C018FFCF0B82DB
+  Ciphertext (16B)   : 2E 27 EC 1A 79 50 51 E2 FF 6B 61 8E D2 56 D8 E5 | MAC: E3F743700D34CE12 [AUTH_OK]
+  Scrubbed Msg Key   : 0000000000000000 (Forward Secrecy Enforced)
+
+
+
+...Program finished with exit code 0
+Press ENTER to exit console.
