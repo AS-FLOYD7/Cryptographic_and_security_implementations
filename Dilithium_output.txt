@@ -1,0 +1,19 @@
+==============================================================
+   Dilithium-2 (ML-DSA-44) Implementation in C using NTT      
+==============================================================
+
+[*] Starting Dilithium-2 Operations...
+
+--- Signature Validation ---
+Signed Message    : 66B24843BB2A051548A160FDB7F3C59310124AD40464BDA4EE90B0B4C629D898
+Valid Signature   : VERIFIED (ACCEPT)
+Tampered Message  : REJECTED (FORGERY BLOCKED)
+Avg FS Attempts   : 4.43 attempts/sig (3.43 rejections/sig)
+
+--- Performance Benchmark (Average CPU Cycles over 1000 runs) ---
+ | NTT Operation        :      31195 cycles |
+ | InvNTT Operation     :      37188 cycles |
+ | Dilithium KeyGen     :     681471 cycles |
+ | Dilithium Sign       :    3391933 cycles |
+ | Dilithium Verify     :     794031 cycles |
+--------------------------------------------------------------
